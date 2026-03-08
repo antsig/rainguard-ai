@@ -9,7 +9,8 @@ def generate_synthetic_rainfall(output_path="data/rainfall_dataset.csv"):
     end_date = datetime(2025, 12, 31)
     
     date_range = pd.date_range(start=start_date, end=end_date)
-    regions = ["Jakarta", "Bandung", "Surabaya", "Yogyakarta", "Semarang"]
+    from src.fetch_bmkg import BMKG_URLS
+    regions = list(BMKG_URLS.keys())
     
     records = []
     

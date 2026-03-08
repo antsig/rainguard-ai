@@ -9,26 +9,43 @@ import numpy as np
 # API endpoint locally
 API_URL = "http://localhost:8000/predict"
 
-# Coordinates for Map
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from src.fetch_bmkg import BMKG_URLS
+ALL_REGIONS = list(BMKG_URLS.keys())
+
+# Coordinates for Map (with fallbacks for new provinces)
 REGION_COORDS = {
-    "Jakarta": {"lat": -6.2088, "lon": 106.8456},
-    "Bandung": {"lat": -6.9175, "lon": 107.6191},
-    "Surabaya": {"lat": -7.2504, "lon": 112.7688},
-    "Yogyakarta": {"lat": -7.7956, "lon": 110.3695},
-    "Semarang": {"lat": -6.9667, "lon": 110.4167}
+    "DKI Jakarta": {"lat": -6.2088, "lon": 106.8456},
+    "Jawa Barat": {"lat": -6.9175, "lon": 107.6191},
+    "Jawa Timur": {"lat": -7.2504, "lon": 112.7688},
+    "DI Yogyakarta": {"lat": -7.7956, "lon": 110.3695},
+    "Jawa Tengah": {"lat": -6.9667, "lon": 110.4167},
+    "Bali": {"lat": -8.4095, "lon": 115.1889},
+    "Aceh": {"lat": 4.6951, "lon": 96.7494},
+    "Sumatera Utara": {"lat": 2.1154, "lon": 99.5451},
+    "Sumatera Barat": {"lat": -0.7390, "lon": 100.8000},
+    "Riau": {"lat": 0.2933, "lon": 101.7068},
+    "Papua": {"lat": -4.2699, "lon": 138.0803},
+    "Sulawesi Selatan": {"lat": -4.1449, "lon": 119.9042},
+    "Kalimantan Timur": {"lat": 0.5387, "lon": 116.4194}
 }
+# Fallback center of Indonesia for unspecified coords
+DEFAULT_COORD = {"lat": -2.5489, "lon": 118.0149}
 
 # API endpoint locally
 API_URL = "http://localhost:8000/predict"
 
 # Sub-districts simulation for richer tooltips
 REGION_DISTRICTS = {
-    "Jakarta": ["Kebayoran Baru", "Setiabudi", "Cilandak", "Kemang", "Tebet", "Menteng", "Kelapa Gading", "Cengkareng", "Mampang", "Pancoran"],
-    "Bandung": ["Coblong", "Cidadap", "Sumur Bandung", "Cicendo", "Andir", "Astanaanyar", "Regol", "Lengkong", "Buahbatu", "Kiaracondong"],
-    "Surabaya": ["Gubeng", "Wonokromo", "Sawahan", "Tegalsari", "Genteng", "Tambaksari", "Sukolilo", "Rungkut", "Wiyung", "Jambangan"],
-    "Yogyakarta": ["Gondokusuman", "Jetis", "Danurejan", "Gedongtengen", "Kraton", "Mantrijeron", "Mergangsan", "Umbulharjo", "Kotagede", "Tegalrejo"],
-    "Semarang": ["Semarang Tengah", "Semarang Selatan", "Semarang Barat", "Semarang Timur", "Semarang Utara", "Gajahmungkur", "Candisari", "Tembalang", "Pedurungan", "Banyumanik"]
+    "DKI Jakarta": ["Kebayoran Baru", "Setiabudi", "Cilandak", "Kemang", "Tebet", "Menteng", "Kelapa Gading", "Cengkareng", "Mampang", "Pancoran"],
+    "Jawa Barat": ["Coblong", "Cidadap", "Sumur Bandung", "Cicendo", "Andir", "Astanaanyar", "Regol", "Lengkong", "Buahbatu", "Kiaracondong"],
+    "Jawa Timur": ["Gubeng", "Wonokromo", "Sawahan", "Tegalsari", "Genteng", "Tambaksari", "Sukolilo", "Rungkut", "Wiyung", "Jambangan"],
+    "DI Yogyakarta": ["Gondokusuman", "Jetis", "Danurejan", "Gedongtengen", "Kraton", "Mantrijeron", "Mergangsan", "Umbulharjo", "Kotagede", "Tegalrejo"],
+    "Jawa Tengah": ["Semarang Tengah", "Semarang Selatan", "Semarang Barat", "Semarang Timur", "Semarang Utara", "Gajahmungkur", "Candisari", "Tembalang", "Pedurungan", "Banyumanik"]
 }
+
 
 st.set_page_config(page_title="RainGuard AI 🌧️", page_icon="🌧️", layout="wide")
 
@@ -97,7 +114,7 @@ st.markdown('<p class="subtitle">Sistem Peringatan Dini Risiko Banjir Berbasis A
 
 # Sidebar
 st.sidebar.header("Konfigurasi")
-region = st.sidebar.selectbox("Pilih Wilayah", ["Jakarta", "Bandung", "Surabaya", "Yogyakarta", "Semarang"])
+region = st.sidebar.selectbox("Pilih Wilayah", ALL_REGIONS)
 daysToPredict = st.sidebar.slider("Hari Prediksi", 3, 14, 7)
 
 if st.sidebar.button("Prediksi Risiko Banjir"):
@@ -171,7 +188,7 @@ if st.sidebar.button("Prediksi Risiko Banjir"):
 
                 st.markdown("---")
                 st.subheader(f"📍 Peta Genangan Banjir 3D Detail: {region}")
-                coords = REGION_COORDS[region]
+                coords = REGION_COORDS.get(region, DEFAULT_COORD)
                 
                 # V2 Advanced Map: Setup Topological Spread simulation
                 num_points = 800
@@ -179,7 +196,7 @@ if st.sidebar.button("Prediksi Risiko Banjir"):
                 
                 lats = np.random.normal(coords["lat"], spread, num_points)
                 lons = np.random.normal(coords["lon"], spread, num_points)
-                districts_pool = REGION_DISTRICTS.get(region, ["Pusat Kota"])
+                districts_pool = REGION_DISTRICTS.get(region, ["Pusat Kota", "Pinggiran", "Barat", "Timur", "Selatan", "Utara"])
                 point_districts = np.random.choice(districts_pool, num_points)
                 
                 map_df = pd.DataFrame({
