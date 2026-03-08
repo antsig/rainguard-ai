@@ -4,6 +4,7 @@ import pandas as pd
 import plotly.express as px
 import pydeck as pdk
 from datetime import datetime, timedelta
+import numpy as np
 
 # API endpoint locally
 API_URL = "http://localhost:8000/predict"
@@ -19,6 +20,15 @@ REGION_COORDS = {
 
 # API endpoint locally
 API_URL = "http://localhost:8000/predict"
+
+# Sub-districts simulation for richer tooltips
+REGION_DISTRICTS = {
+    "Jakarta": ["Kebayoran Baru", "Setiabudi", "Cilandak", "Kemang", "Tebet", "Menteng", "Kelapa Gading", "Cengkareng", "Mampang", "Pancoran"],
+    "Bandung": ["Coblong", "Cidadap", "Sumur Bandung", "Cicendo", "Andir", "Astanaanyar", "Regol", "Lengkong", "Buahbatu", "Kiaracondong"],
+    "Surabaya": ["Gubeng", "Wonokromo", "Sawahan", "Tegalsari", "Genteng", "Tambaksari", "Sukolilo", "Rungkut", "Wiyung", "Jambangan"],
+    "Yogyakarta": ["Gondokusuman", "Jetis", "Danurejan", "Gedongtengen", "Kraton", "Mantrijeron", "Mergangsan", "Umbulharjo", "Kotagede", "Tegalrejo"],
+    "Semarang": ["Semarang Tengah", "Semarang Selatan", "Semarang Barat", "Semarang Timur", "Semarang Utara", "Gajahmungkur", "Candisari", "Tembalang", "Pedurungan", "Banyumanik"]
+}
 
 st.set_page_config(page_title="RainGuard AI 🌧️", page_icon="🌧️", layout="wide")
 
@@ -107,7 +117,16 @@ if st.sidebar.button("Prediksi Risiko Banjir"):
                     st.markdown(f'<div class="risk-card risk-medium"><h2 style="margin:0; padding-bottom:5px;">⚠️ Risiko Banjir Hari Ini: SEDANG</h2><h4 style="margin:0; font-weight:400;">Curah hujan sedang diperkirakan. Tetap waspada.</h4></div>', unsafe_allow_html=True)
                 else:
                     st.markdown(f'<div class="risk-card risk-low"><h2 style="margin:0; padding-bottom:5px;">✅ Risiko Banjir Hari Ini: RENDAH</h2><h4 style="margin:0; font-weight:400;">Curah hujan normal. Tidak ada ancaman langsung.</h4></div>', unsafe_allow_html=True)
-                    
+                
+                # Fetch BMKG Output
+                bmkg = data.get('bmkg_realtime', {})
+                if bmkg and 'error' not in bmkg:
+                    st.markdown("### 🌤️ Laporan Cuaca BMKG Terkini")
+                    c1, c2, c3 = st.columns(3)
+                    c1.metric("Cuaca", bmkg.get('weather_desc', 'N/A'))
+                    c2.metric("Suhu", f"{bmkg.get('temperature_c', 'N/A')} °C")
+                    c3.metric("Kelembapan", f"{bmkg.get('humidity_percent', 'N/A')} %")
+                
                 st.markdown("<br>", unsafe_allow_html=True)
                 
                 # Split layout
@@ -151,41 +170,53 @@ if st.sidebar.button("Prediksi Risiko Banjir"):
                         ''', unsafe_allow_html=True)
 
                 st.markdown("---")
-                st.subheader(f"📍 Peta Risiko Banjir Interaktif: {region}")
+                st.subheader(f"📍 Peta Genangan Banjir 3D Detail: {region}")
                 coords = REGION_COORDS[region]
                 
-                # Assign color based on exact risk level
+                # V2 Advanced Map: Setup Topological Spread simulation
+                num_points = 800
+                spread = 0.04 if risk_today == "High" else (0.02 if risk_today == "Medium" else 0.01)
+                
+                lats = np.random.normal(coords["lat"], spread, num_points)
+                lons = np.random.normal(coords["lon"], spread, num_points)
+                districts_pool = REGION_DISTRICTS.get(region, ["Pusat Kota"])
+                point_districts = np.random.choice(districts_pool, num_points)
+                
+                map_df = pd.DataFrame({
+                    "lat": lats,
+                    "lon": lons,
+                    "district": point_districts,
+                    "weight": np.random.randint(1, 10, num_points)
+                })
+
+                # Basic color assignment based on severity
                 if risk_today == "High":
-                    map_color = [204, 0, 0, 200]
+                    point_color = [204, 0, 0, 180]
                 elif risk_today == "Medium":
-                    map_color = [255, 193, 7, 200]
+                    point_color = [255, 153, 0, 180]
                 else:
-                    map_color = [40, 167, 69, 200]
-                    
-                map_df = pd.DataFrame([{
-                    "lat": coords["lat"],
-                    "lon": coords["lon"],
-                    "risk": risk_today
-                }])
+                    point_color = [0, 153, 0, 180]
 
                 st.pydeck_chart(pdk.Deck(
-                    map_style=None,
+                    map_style='road',
                     initial_view_state=pdk.ViewState(
                         latitude=coords["lat"],
                         longitude=coords["lon"],
-                        zoom=10,
-                        pitch=45,
+                        zoom=11 if risk_today == "High" else 12,
+                        pitch=0,
                     ),
                     layers=[
                         pdk.Layer(
                             'ScatterplotLayer',
                             data=map_df,
                             get_position='[lon, lat]',
-                            get_color=map_color,
-                            get_radius=4000,
-                            pickable=True
+                            get_color=point_color,
+                            get_radius=250,
+                            pickable=True,
+                            opacity=0.8
                         )
-                    ]
+                    ],
+                    tooltip={"html": "<b>Lokasi Genangan:</b> Kecamatan {district} <br/> <b>Koordinat:</b> {lon}, {lat}", "style": {"color": "white"}}
                 ))
                         
             else:

@@ -24,7 +24,7 @@ def load_and_preprocess_data(csv_path="data/rainfall_dataset.csv"):
     df['region'] = df['region'].astype('category')
     
     # Handle any missing values just in case
-    df = df.fillna(method='ffill')
+    df = df.ffill()
     
     # Add log of rainfall to reduce extreme variance impact
     df['log_rainfall'] = np.log1p(df['rainfall'])

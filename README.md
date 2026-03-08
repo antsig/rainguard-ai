@@ -28,7 +28,8 @@ RainGuard AI menyediakan:
 - Klasifikasi Risiko Banjir
 - Dashboard Peringatan Dini Interaktif
 - Rekomendasi Tindakan Kesiapsiagaan
-- Peta Peringatan Banjir Interaktif (Flood Map)
+- **[Baru]** Integrasi Cuaca Real-Time Terkini dari BMKG (Parsing XML Terbuka)
+- **[Baru]** Peta Peringatan Genangan Banjir 2D/3D Interaktif (Simulasi PyDeck Koordinat Detail Area)
 
 ## Model AI
 
@@ -50,6 +51,7 @@ Keluaran:
 - PyTorch
 - Streamlit
 - FastAPI
+- Beautifulsoup4 & lxml (Web Scraping BMKG)
 - Plotly & PyDeck
 
 ## Cara Menjalankan Aplikasi dari Awal (Langkah demi Langkah)
@@ -126,6 +128,5 @@ RainGuard AI membantu masyarakat:
 
 ## Rencana Pengembangan Selanjutnya
 
-- Mengintegrasikan data BMKG secara real-time
-- Menambahkan visualisasi peta daerah genangan banjir yang lebih detail
-- Aplikasi berbasis Mobile
+- Aplikasi Peringatan Dini Berbasis iOS/Android Mobile
+- Sistem _Push Notification_ (WhatsApp/Email API) saat status Bahaya (Merah) tercapai.
