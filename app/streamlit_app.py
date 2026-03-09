@@ -45,8 +45,9 @@ REGION_DISTRICTS = {
 
 st.set_page_config(page_title="RainGuard AI 🌧️", page_icon="🌧️", layout="wide")
 
-# Custom CSS for aesthetics (glassmorphism & clean UI)
+# Custom CSS for aesthetics (glassmorphism & clean UI) and Dicoding Verification Meta Tag
 st.markdown("""
+    <meta name="dicoding:email" content="underfighterkkh@gmail.com">
 <style>
     /* Global Background */
     .stApp {
