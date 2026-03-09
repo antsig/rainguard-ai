@@ -98,25 +98,15 @@ python src/train_model.py
 
 _(Tunggu hingga proses training 10 epochs selesai. Model akan disimpan di `models/lstm_model.pth`)_
 
-### 4. Jalankan AI Backend API (FastAPI)
+### 4. Jalankan Early Warning Dashboard (Streamlit)
 
-Buka terminal baru (pastikan virtual environment aktif), lalu jalankan:
-
-```bash
-uvicorn app.api:app --reload
-```
-
-_(Server backend akan berjalan di http://localhost:8000)_
-
-### 5. Jalankan Early Warning Dashboard (Streamlit)
-
-Buka lagi terminal baru (pastikan virtual environment aktif), lalu jalankan:
+Buka terminal (pastikan virtual environment aktif), lalu jalankan:
 
 ```bash
 streamlit run app/streamlit_app.py
 ```
 
-_(Browser akan otomatis membuka dashboard interaktif dan peta risiko banjir di http://localhost:8501)_
+_(Browser akan otomatis membuka dashboard interaktif dan peta risiko banjir di http://localhost:8501. Aplikasi terintegrasi secara monolitik, yang berarti Model AI (PyTorch) akan dijalankan seketika di peranti Anda tanpa memerlukan backend tambahan.)_
 
 ## Dampak
 

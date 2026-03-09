@@ -30,14 +30,14 @@ Berikut adalah penjabaran fitur-fitur dan teknologi utama yang menyusun RainGuar
 
 - ### **Cara Penggunaan Product**
 
-Produk didesain sedemikian rupa agar masyarakat umum atau pengguna _early-user_ dapat menggunakan aplikasi RainGuard AI secara intuitif. Jalankan perintah instalasi dan server di bawah ini:
+Produk didesain sedemikian rupa agar masyarakat umum atau pengguna _early-user_ dapat menggunakan aplikasi RainGuard AI secara intuitif. Aplikasi terintegrasi secara monolitik (tanpa perlu repot menyalakan backend terpisah). Jalankan perintah instalasi dan server di bawah ini:
 
-1. **Jalankan Backend Server:** Buka terminal pertama dan jalankan `uv run uvicorn app.api:app --reload` di _root server_.
-2. **Jalankan Web Dashboard:** Buka terminal kedua dan jalankan perintah `uv run streamlit run app/streamlit_app.py`.
+1. Buka terminal (pastikan virtual environment Python Anda sudah aktif).
+2. **Jalankan Web Dashboard:** Ketik dan jalankan perintah `streamlit run app/streamlit_app.py`.
 3. Buka URL Web Streamlit pada browser (biasanya `http://localhost:8501`).
 4. Pada panel sebelah kiri (**Sidebar Konfigurasi**), pengguna dapat menekan _dropdown_ untuk **memilih target dari 34 Provinsi di Indonesia**.
 5. Sesuaikan parameter jumlah hari prakiraan (contoh: 7 Hari ke Depan).
-6. Klik tombol biru **"Prediksi Risiko Banjir"** untuk menembak query ke AI.
+6. Klik tombol biru **"Prediksi Risiko Banjir"** untuk menembak query ke AI secara _on-the-fly_.
 7. _Dashboard_ secara instan akan memuat status klasifikasi bahaya banjir terbaru, kondisi _real-time_ cuaca berdasarkan pengolahan data BMKG resmi, serta melukis matriks visual bar-plot Plotly.
 8. Pengguna bisa membaca **Rekomendasi Tindakan** mitigasi di sebelah kanan. Pengguna juga dapat mulai berinteraksi dengan peta visualisasi persebaran 3D di bagian bawah yang secara dinamis merefleksikan keparahan rintik/genangan topologis menggunakan pustaka pydeck.
 
