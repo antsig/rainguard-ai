@@ -43,6 +43,17 @@ Produk didesain sedemikian rupa agar masyarakat umum atau pengguna _early-user_ 
 
 - ### **Informasi Pendukung [Opsional]**
 
-- Proyek ini disiapkan sangat modular dengan harapan agar kelak pemangku kebijakan (seperti BNPB) bisa menggantikan data `data/rainfall_dataset.csv` sintetis ini ke set data cuaca aslinya guna membuahkan _tuning_ parameter model LSTM yang jauh lebih realistis.
+**Tautan Penting & Dokumentasi:**
+
+- **Repository GitHub:** [Link GitHub Anda Di Sini]
+- **Demo Video (YouTube/Lainnya):** [Link Video Demo Anda Di Sini]
+- **Live App (Streamlit Cloud):** [Link Streamlit App Anda Di Sini]
 - Proyek _repository_ mencakup arsip interaktif eksplorasi _raw data_ yang digarap menggunakan antarmuka Jupyter Notebook `training_model.ipynb`.
 - Seluruh arsitektur _dependency_ dapat sepenuhnya direplikasi menggunakan berkas virtual environment _modern package manager_ (seperti `uv` atau `pip`).
+
+**Rencana Pengembangan ke Depan:**
+
+1. **Penggunaan Data Historis Asli:** Saat ini, model LSTM dilatih menggunakan sintesis 74.500+ titik data. Ke depannya, bekerja sama dengan pemangku kebijakan (seperti BNPB/BMKG) untuk mengintegrasikan data cuaca historis yang valid akan menghasilkan _tuning_ parameter prediksi yang jauh lebih presisi.
+2. **Aplikasi Mobile (iOS/Android):** Pembuatan portal aplikasi peringatan dini khusus _mobile_ berbasis Flutter/React Native, memanfaatkan REST API FastAPI yang telah dikembangkan secara parsial.
+3. **Sistem Notifikasi Pusher (Push Notifications):** Mengotomatiskan peringatan via WhatsApp API atau Email Blast kepada penduduk di wilayah tertentu jika titik ambang batas peringatan (Warna Merah / High Risk) telah dilampaui.
+4. **Hiperlokalisasi Radar Geo-spasial:** Meningkatkan skala resolusi prediksi genangan dari tingkat provinsi menjadi tingkat kecamatan atau grid spesifik (1x1 km) guna mempercepat koordinasi rute evakuasi.
