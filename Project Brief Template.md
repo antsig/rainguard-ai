@@ -1,13 +1,3 @@
----
-
-### **Informasi Peserta**
-
-| No  |      Nama      | Email Dicoding  |
-| :-: | :------------: | :-------------: |
-|  1  |  [Nama Anda]   |  [Email Anda]   |
-|  2  | [Nama Anggota] | [Email Anggota] |
-|  3  | [Nama Anggota] | [Email Anggota] |
-
 - ### **Problem Statement**
 
 Banjir merupakan salah satu bencana alam yang paling sering terjadi di Indonesia, yang seringkali disebabkan oleh curah hujan ekstrem pada musim penghujan. Kurangnya sistem peringatan dini yang akurat, informatif, dan mudah diakses oleh masyarakat umum maupun pemangku kebijakan sering kali mengakibatkan keterlambatan penanganan dan evakuasi, sehingga menimbulkan kerugian material hingga korban jiwa. Oleh karena itu, dibutuhkan sebuah solusi berbasis data cerdas yang tidak hanya memprediksi cuaca, tetapi juga mengklasifikasikan tingkat risiko banjir serta memberikan rekomendasi tindakan secara real-time.
